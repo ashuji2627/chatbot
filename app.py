@@ -9,11 +9,11 @@ from datetime import datetime
 from logger import get_logger
 logger = get_logger()
 
-# ---- CONFIG ----
+
 st.set_page_config(page_title="Chatbot", layout="centered")
 init_db()
 
-# ---- CUSTOM CSS ----
+
 st.markdown("""
 <style>
 [data-baseweb="radio"] > div {
@@ -33,16 +33,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ---- UTILITY ----
+
 def get_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-# ---- SESSION INIT ----
+
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
     logger.info(f"New chat session started: {st.session_state.session_id}")
 
-# ---- FETCH SESSION OPTIONS ----
+
 def refresh_sidebar_sessions():
     session_options = get_all_sessions()
     session_ids = list(session_options.keys())
@@ -61,7 +61,7 @@ selected_index = st.sidebar.radio(
     key="session_selector"
 )
 
-# ---- HANDLE SESSION SELECTION ----
+
 if selected_index == 0:
     st.session_state.session_id = str(uuid.uuid4())
     logger.info(f"New session selected (New Chat): {st.session_state.session_id}")
@@ -69,14 +69,14 @@ else:
     st.session_state.session_id = session_ids[selected_index]
     logger.info(f"Existing session selected: {st.session_state.session_id}")
 
-# ---- DELETE SESSION ----
+
 if st.sidebar.button("Delete This Chat"):
     delete_session(st.session_state.session_id)
     logger.warning(f"Deleted session: {st.session_state.session_id}")
     st.success("Deleted successfully!")
     st.rerun()
 
-# ---- FETCH MESSAGES ----
+
 messages = get_messages(st.session_state.session_id)
 logger.debug(f"Loaded messages for session: {st.session_state.session_id}, count: {len(messages)}")
 
@@ -88,16 +88,16 @@ else:
     st.title("Chatbot")
     st.info("Start a conversation to begin a new chat.")
 
-# ---- TYPING + SPINNER ANIMATION ----
+
 def show_typing_then_spinner(total_seconds=20):
     typing = st.empty()
     phrases = [
-        "🤖 Booting up AI circuits...",
-        "🧠 Thinking really hard...",
-        "📚 Recalling every word ever written...",
-        "🔍 Searching the depths of data...",
-        "💡 Brewing up a clever reply...",
-        "⌛ Almost there, stay tuned...",
+        "Booting up AI circuits...",
+        "Thinking really hard...",
+        "Recalling every word ever written...",
+        "Searching the depths of data...",
+        "Brewing up a clever reply...",
+        "Almost there, stay tuned...",
     ]
     start_time = time.time()
     index = 0
@@ -154,7 +154,7 @@ with st.container():
                     st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ---- SCROLL TO BOTTOM ----
+
 if st.button("⬇ Scroll to Bottom"):
     st.rerun()
 
@@ -168,7 +168,7 @@ if prompt:
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Acknowledgement with timestamps
+
     st.info(f"Code sent to server at {get_time()}")
 
     contextual_prompt = generate_contextual_prompt(st.session_state.session_id, prompt)
@@ -179,7 +179,7 @@ if prompt:
 
 
 
-    # Show prompt that will be sent to the model
+
     with st.expander("Prompt Sent to Model"):
         st.code(contextual_prompt, language="markdown")
 
